@@ -1,0 +1,156 @@
+% Being section ----------------------------------------------------------------
+\section{Coding}
+
+% Tools subsection -------------------------------------------------------------
+\subsection{Tools}
+
+\begin{frame}{Useful Tools}
+    If you plan on working with data, you must know how to code.
+    \begin{itemize}
+        \item \textbf{Clean code:} Your code must be easy to understand.
+        \item \textbf{Reproducible code:} More and more the profession requires code to be easily reproduced in any system (how can I trust a paper if I cannot replicate it?).
+    \end{itemize}
+
+    \vspace{2em}
+    
+    For most of us, knowing one or two high-level programming languages is enough, but you must know how to use it efficiently.
+    \begin{itemize}
+        \item \textbf{Efficiency:} Can I make this code run faster?
+    \end{itemize}
+
+    Before we dive into R, let's look at some useful results.
+    
+\end{frame}
+
+% Leverage subsection ----------------------------------------------------------
+\subsection{Leverage}
+
+\begin{frame}{Leverage}
+    Depending on the data we are working with, we might want to know (probably do) which observations are more or less influential in computing our estimator. Recall that we derived the projection matrix before as:
+    \begin{align*}
+        P = X(X'X)^{-1}X' =  X(X'X)^{-1}X'Y = X \hat{\beta}
+    \end{align*}
+    
+    We can get the diagonal elements of the projection matrix by looking at the $i$-th observation in matrix $X$ to get
+    \begin{align*}
+        h_{ii} = x_i (X' X)^{-1} x_i'
+    \end{align*}
+
+    Intuitively, this tells us how much the matrix $P$ that projects $Y$ onto the space spanned by the columns of $X$ moves by a given observation. This is often called the leverage
+
+\end{frame}
+
+\begin{frame}{Jackknife}
+    Imagine you want to estimate the impact of income on some variable, but you have Mark Zuckerberg as an observation. This will throw off your estimate, so you might want to know what your estimator would be like without that observation.
+
+    \vspace{2em}
+    
+    You could simply remove it from the data and re-run your OLS, but what if you want to do this for each observation to see how much your estimator change? That's a lot of work. Instead, note that the \href{https://en.wikipedia.org/wiki/Sherman-Morrison_formula}{\underline{Sherman-Morrison formula}} states that for a non-singular matrix $A$ and vector $b$ the following holds:
+    \begin{align*}
+        (A - bb')^{-1} = A^{-1} + (1 - b'A^{-1}b)^{-1} A^{-1} bb' A^{-1}    
+    \end{align*}
+
+\end{frame}
+
+\begin{frame}{Jackknife}
+    Using this formula, we know then that:
+    \begin{align*}
+        (X'X - x_ix_i') &= (X'X)^{-1} + (1 - \underbrace{x_i' (X'X)^{-1} x_i}_{= h_{ii}})^{-1} (X'X)^{-1} x_i x_i' (X'X)^{-1}
+    \end{align*}
+
+    We can calculate the \textbf{leave-one-out} estimator by removing observation $i$ from our dataset:
+    \begin{align*}
+        \hat{\beta}_{-i} = (X'X - x_i x_i')^{-1} (X' Y - x_i y_i)
+    \end{align*}
+
+    Plug in the result from the Sherman-Morrison formula (cont.)
+
+\end{frame}
+
+\begin{frame}{Jackknife}
+    The leave-one-out estimator can be written as:
+    \begin{align*}
+        \hat{\beta}_{-i} &= \underbrace{(X'X)^{-1} X' Y}_{= \hat{\beta}} - (X'X)^{-1} x_i y_i
+        \\
+        &+  (1 -h_{ii})^{-1} (X'X)^{-1} x_i x_i' (X'X)^{-1} (X' Y - x_i y_i)
+        \\
+        &= \hat{\beta} - (X'X)^{-1} x_i y_i
+        \\
+        &+ (1 - h_{ii})^{-1} (X' X)^{-1} (x_i x_i' \underbrace{(X'X)^{-1} X' Y}_{= \hat{\beta}} - x_i \underbrace{x_i' (X'X)^{-1} x_i}_{= h_{ii}} y_i)
+        \\
+        &= \hat{\beta} - (1 - h_{ii}) (X'X)^{-1} x_i \Biggr((1 - h_{ii})y_i - x_i' \hat{\beta} + h_{ii} y_i \Biggr)
+        \\
+        &= \hat{\beta} - (1 - h_{ii}) (X'X)^{-1} x_i \Biggr(y_i - x_i' \hat{\beta} \Biggr)
+    \end{align*}
+
+\end{frame}
+
+\begin{frame}{Jackknife}
+    But $y_i - x_i' \hat{\beta}$ is the residual $\hat{e}_i$ of the OLS regression, which then gives the final result
+    \begin{align*}
+        \hat{\beta}_{-i} &= \hat{\beta} - (X'X)^{-1} x_i \underbrace{(1 - h_{ii}) \hat{e}_i}_{\equiv \tilde{e}_i}
+    \end{align*}
+
+    The term $\tilde{e}_i$ is the leave-one-out residual or prediction error. The expression above allows us to see whether $\hat{\beta}$ moves a lot or not if we take observation $i$ out.
+
+    \vspace{2em}
+
+    Importantly, this expression shows us that we don't have to run lots of regressions to get the the estimators we want.
+
+\end{frame}
+
+% Standard errors subsection ---------------------------------------------------
+\subsection{Standard errors}
+
+\begin{frame}{OLS Variance}
+    Recall that we can calculate the conditional variance of the OLS estimator as follows:
+    \begin{align*}
+        \operatorname{Var}(\hat{\beta}_{OLS} \mid X) &= \operatorname{Var}\Biggr( (X'X)^{-1} X' Y \mid X \Biggr)
+        \\
+        &= (X'X)^{-1} X' \operatorname{Var}(Y \mid X) X (X'X)^{-1}
+    \end{align*}
+    
+    But $Y = X \beta + \varepsilon \implies \operatorname{Var}(Y \mid X) = \operatorname{Var}(\epsilon \mid X) = \Omega$, where $\beta$ and $\epsilon$ are the true values. This means we can write the conditional variance of our estimator as:
+    \begin{align*}
+        \operatorname{Var}(\hat{\beta}_{OLS} \mid X) &= (X'X)^{-1} (X' \Omega X) (X'X)^{-1}
+    \end{align*}
+
+    The middle term is simply
+    \begin{align*}
+        (X' \Omega X) = \sum_{i=1}^n x_i x_i' \sigma_i^2
+    \end{align*}
+    
+\end{frame}
+
+\begin{frame}{OLS Variance}
+    If we know the true values of $\varepsilon$, we can use them to calculate the variance:
+    \begin{align*}
+        \operatorname{Var}(\hat{\beta}_{OLS} \mid X) &= (X'X)^{-1} \Biggr( \sum_{i=1}^n x_i x_i' \varepsilon_i^2 \Biggr) (X'X)^{-1}
+    \end{align*}
+
+    This estimator is clearly unbiased:
+    \begin{align*}
+        \mathbb{E}[\operatorname{Var}(\hat{\beta}_{OLS} \mid X)] &= (X'X)^{-1} \Biggr( \sum_{i=1}^n x_i x_i' \mathbb{E}[\varepsilon_i^2] \Biggr) (X'X)^{-1}
+        \\
+        &= (X'X)^{-1} \Biggr( \sum_{i=1}^n x_i x_i' \sigma_i^2 \Biggr) (X'X)^{-1}
+    \end{align*}
+
+    But we don't really know the true value of $\varepsilon$.
+    
+\end{frame}
+
+\begin{frame}{Heteroskedasticity Consistent Estimates}
+    In R, we have a few options we can use to compute our standard errors:
+    \begin{align*}
+        \operatorname{Var}(\hat{\beta}_{OLS} \mid X)_{HC0} &= (X'X)^{-1} \Biggr( \sum_{i=1}^n x_i x_i' \hat{e}_i^2 \Biggr) (X'X)^{-1}
+        \\
+        \operatorname{Var}(\hat{\beta}_{OLS} \mid X)_{HC1} &= (X'X)^{-1} \Biggr( \sum_{i=1}^n x_i x_i' \hat{e}_i^2 \Biggr) (X'X)^{-1} \Biggr( \frac{n}{n-k} \Biggr)
+        \\
+        \operatorname{Var}(\hat{\beta}_{OLS} \mid X)_{HC2} &= (X'X)^{-1} \Biggr( \sum_{i=1}^n (1 - h_{ii})^{-1} x_i x_i' \hat{e}_i^2 \Biggr) (X'X)^{-1}
+        \\
+        \operatorname{Var}(\hat{\beta}_{OLS} \mid X)_{HC3} &= (X'X)^{-1} \Biggr( \sum_{i=1}^n (1 - h_{ii})^{-2} x_i x_i' \hat{e}_i^2 \Biggr) (X'X)^{-1}
+    \end{align*}
+
+    The last two we compute by summing over the leave-one-out estimates.
+    
+\end{frame}
