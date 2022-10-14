@@ -15,8 +15,7 @@
 
 # Clean environment change working directory
 rm(list=ls())
-#setwd("/Users/gabrielsgaspar/Library/CloudStorage/OneDrive-LondonBusinessSchool/Teaching/")
-setwd("C:\\Users\\gsimoesgaspar\\OneDrive - London Business School\\Teaching")
+setwd("/Users/gabrielsgaspar/Library/CloudStorage/OneDrive-LondonBusinessSchool/Teaching/")
 
 # Define a vector of packages that the script will use
 pkgs_required <- c("AER", "estimatr", "tidyverse", "vtable")
@@ -346,3 +345,20 @@ cr2     <- lm_robust(score ~ st_ratio + income, data=CASchools,
 # CR2 errors are the most conservative std error estimates
 cr0 < crstata # CR0 gives smaller errors than Stata
 crstata < cr2 # Stata gives smaller errors than CR2
+
+
+################################################################################
+########################### Polynomial Regression ##############################
+################################################################################
+
+# We can also add polynomial terms to our regression (e.g. a second decree polynomial)
+reg_pol1  <- lm(score ~ st_ratio + poly(income, 2, raw=TRUE), data=CASchools)
+summary(reg_pol1)
+
+# Alternatively, you can write
+reg_pol2  <- lm(score ~ st_ratio + income + I(income^2), data=CASchools)
+summary(reg_pol2)
+
+# Note that the two above are NOT the same as
+reg_pol3  <- lm(score ~ st_ratio + poly(income, 2), data=CASchools)
+summary(reg_pol3) # Terms are orthogonalized, so results differ
