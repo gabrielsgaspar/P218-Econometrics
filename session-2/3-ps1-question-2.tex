@@ -1,0 +1,96 @@
+% Begin section ----------------------------------------------------------------
+\section{Question 2}
+
+% Part (a) ---------------------------------------------------------------------
+\begin{frame}{Part (a)}
+
+    You are told the the estimator is:
+    \begin{align*}
+        \tilde{\beta} &= \frac{\bar{Y}}{\bar{X}} = \frac{\sum_{i=1}^n Y_i}{\sum_{i=1}^n X_i} = \frac{\mathbf{1}' Y}{\mathbf{1}' X}
+    \end{align*}
+    
+    where $\mathbf{1}$ is a $n \times 1$ column vector of ones. The expression above is linear in $Y$. We can take the expectation on both sides to show that this estimator is unbiased:
+    \begin{align*}
+        \mathbb{E} [ \tilde{\beta} \mid X] &\overset{GM0}{=} \mathbb{E} \Biggr[ \frac{\mathbf{1}' X \beta}{\mathbf{1}' X} \mid X \Biggr] + \mathbb{E} \Biggr[ \frac{\mathbf{1}' \varepsilon}{\mathbf{1}' X} \mid X \Biggr]
+        \\
+         &\overset{GM3}{=} \beta
+    \end{align*}
+    
+\end{frame}
+
+\begin{frame}{Part (a)}
+
+    To get the conditional variance we can look at
+    \begin{align*}
+        \operatorname{Var} (\tilde{\beta} \mid X ) &= \operatorname{Var} \Biggr( \frac{\mathbf{1}' Y}{\mathbf{1}' X} \mid X \Biggr)
+        \\
+        &= \frac{1}{( \mathbf{1}' X)^2} \operatorname{Var} ( \mathbf{1}' Y \mid X )
+        \\
+        &= \frac{\mathbf{1}' \operatorname{Var} (Y \mid X) \mathbf{1}}{( \mathbf{1}' X)^2}
+    \end{align*}
+    
+    Given the assumptions we have made, we have:
+    \begin{align*}
+        \operatorname{Var} (\tilde{\beta} \mid X ) &\overset{GM3}{=} \sigma^2 \frac{n}{(\mathbf{1}' X)^2}
+    \end{align*}
+    
+\end{frame}
+
+\begin{frame}{Part (a)}
+
+    Remember that the conditional variance of the OLS estimator under our assumptions $GM0$ - $GM3$ is
+    \begin{align*}
+        \operatorname{Var} (\hat{\beta}_{OLS} \mid X ) &= \sigma^2 (X'X)^{-1}
+    \end{align*}
+    
+    But since $X$ in this case is a $n \times 1$ vector and we know that for a general $X_{n \times m}$ the square symmetric matrix $X'X$ is $m \times m$, this means that $X'X = \sum_{i=1}^n x_i^2$, which is a scalar. So we can conclude that:
+    \begin{align*}
+        \operatorname{Var} (\hat{\beta}_{OLS} \mid X ) = \sigma^2 \frac{1}{X'X} \leq \sigma^2 \frac{n}{(\mathbf{1}' X)^2} = \operatorname{Var} (\tilde{\beta} \mid X )
+    \end{align*}
+    
+\end{frame}
+
+\begin{frame}{Part (a)}
+
+    Why is that last part true?
+    \begin{align*}
+        X'X &= \sum_{i=1}^n x_i^2
+        \\
+        &= \sum_{i=1}^n (x_i - \bar{x})^2 + n \bar{x}
+        \\
+        &> n \bar{x}
+        \\
+        &= \frac{(\mathbf{1}' X)^2}{n}
+    \end{align*}
+
+    Check Appendix A of Wooldridge if you need a refresher. Does this make sense given our assumptions and what we know about the Gauss-Markov Theorem?
+    
+\end{frame}
+
+% Part (b) ---------------------------------------------------------------------
+\begin{frame}{Part (b)}
+
+    You are now told to use the first $m < n$ observations and compute the OLS estimator. Let $X_m$ and $Y_m$ the the vectors of the first $m$ observations. Then
+    \begin{align*}
+        \hat{\beta}_{m, OLS}  &\overset{GM1}{=} (X_m' X_m)^{-1} X'_m Y_m
+    \end{align*}
+
+    which is linear in $Y_m$. Since $GM0$ - $GM3$ are met in this case, we know that it is linearly unbiased (but you have to prove in the PS!). To test if it has minimum variance note that:
+    \begin{align*}
+        \operatorname{Var} (\hat{\beta}_{m, OLS} \mid X ) = \sigma^2 \frac{1}{(X_m' X_m)} \geq \sigma^2 \frac{1}{(X' X)} = \operatorname{Var} (\hat{\beta}_{OLS} \mid X )
+    \end{align*}
+
+    since $X_m' X_m = \sum_{i=1}^m x_i^2 \leq \sum_{i=1}^n x_i^2 = X' X$ for $m < n$.
+\end{frame}
+
+% Part (c) ---------------------------------------------------------------------
+\begin{frame}{Part (c)}
+
+    Can we find another estimator with a smaller conditional variance? We can find an infinite amount of them. The Gauss-Markov Theorem says that the OLS estimator is BLUE, but we can relax the assumptions to find something with a smaller variance. For example, for $k \in \mathbb{N}$, consider the estimator
+    \begin{align*}
+        \check{\beta} = k \implies \operatorname{Var}(\check{\beta}) = 0 <  \operatorname{Var}(\hat{\beta}_{OLS})
+    \end{align*}
+
+    This estimator is not unbiased though.
+    
+\end{frame}

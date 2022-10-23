@@ -1,0 +1,128 @@
+% Begin section ----------------------------------------------------------------
+\section{Gauss-Markov Theorem}
+
+% Classical GM subsection ------------------------------------------------------
+\subsection{The Gauss-Markov Theorem}
+
+\begin{frame}{Gauss-Markov Theorem}
+
+    In lecture you saw the famous Gauss-Markov Theorem. Consider the linear regression model described by
+    \begin{align*}
+        Y &= X \beta + \varepsilon
+        \\
+        \mathbb{E}[\varepsilon \mid X] &= 0
+        \\
+        \operatorname{Var}(\varepsilon \mid X) &= \mathbb{E}[\varepsilon \varepsilon' \mid X] = \sigma^2 \Sigma < \infty
+    \end{align*}
+    where $Y$ is an $n \times 1$ random vector, $X$ is an $n \times m$ full-rank matrix of regressors such that $m < n$ and $\varepsilon$ is an $n \times 1$ vector of regression errors.
+
+    \vspace{2em}
+
+    If we add the assumption that the variance-covariance matrix $\Sigma = I_n$, then you saw that the OLS estimator has \textbf{minimum variance} among the estimators that (\textbf{conditional} on regressors) are \textbf{linear} and \textbf{unbiased}. This is famously known as the best linear conditionally unbiased estimator, i.e. BLUE.
+
+\end{frame}
+
+\begin{frame}{Gauss-Markov Assumptions}
+
+    We will summarise the conditions that make the OLS estimator BLUE as follows:
+    \begin{align*}
+        (GM0)& \qquad Y = X \beta + \varepsilon
+        \\
+        (GM1)& \qquad \text{rank}(X) = m 
+        \\
+        (GM2)& \qquad \mathbb{E}[Y \mid X] = X \beta \iff \mathbb{E}[\varepsilon \mid X] = 0
+        \\
+        (GM3)& \qquad \operatorname{Var}(Y \mid X) = \operatorname{Var}(\varepsilon \mid X) = \sigma^2 I 
+    \end{align*}
+
+    These are enough for us to prove the Gauss-Markov theorem. Let's quickly go over them.
+
+\end{frame}
+
+\begin{frame}{Unbiasedness}
+
+    To show that the OLS is conditionally unbiased, simply note that
+    \begin{align*}
+        \hat{\beta}_{OLS} &\overset{GM1}{=} (X'X)^{-1} X'Y
+        \\
+        \hat{\beta}_{OLS} &\overset{GM0}{=} \beta + (X'X)^{-1} X' \varepsilon
+    \end{align*}
+    
+    We can take the expectation on both sides of the equation above noting that $\mathbb{E} [\beta \mid X] = \beta$
+    \begin{align*}
+        \mathbb{E} [ \hat{\beta}_{OLS} \mid X] &= \beta + \mathbb{E} [ (X'X)^{-1} X'(\varepsilon) \mid X]
+        \\
+        \mathbb{E} [ \hat{\beta}_{OLS} \mid X] &= \beta + (X'X)^{-1} X' \mathbb{E} [ \varepsilon \mid X]
+    \end{align*}
+    
+    which finally shows us that:
+    \begin{align*}
+        \mathbb{E} [ \hat{\beta}_{OLS} \mid X] &\overset{GM2}{=} \beta
+    \end{align*}
+
+\end{frame}
+
+\begin{frame}{Minimum Variance}
+
+    Imagine now a general-form \textbf{unbiased linear} estimator $\tilde{\beta}$ for $\beta$ that follows $(GM0)$ - $(GM3)$ defined as follows:
+    \begin{align*}
+        \tilde{\beta} = AY \overset{GM0}{=} A(X \beta + \varepsilon) \implies \mathbb{E}[\tilde{\beta} \mid X] \overset{GM2}{=} AX \beta = \beta \implies AX = I_n
+    \end{align*}
+    
+    The conditional variance of this estimator is simply:
+    \begin{align*}
+        \operatorname{Var} (\tilde{\beta} \mid X) &= A \operatorname{Var} ( Y \mid X) A' \overset{GM3}{=} \sigma^2 A A'
+    \end{align*}
+    
+    We can decompose the general matrix $A$ by adding and subtracting another matrix:
+    \begin{align*}
+        A = A - \underbrace{ (X'X)^{-1} X' + (X'X)^{-1} X'}_{=0} = W + (X'X)^{-1} X'
+    \end{align*}
+
+    where we have defined $W \equiv A - (X'X)^{-1} X'$.
+
+\end{frame}
+
+\begin{frame}{Minimum Variance}
+
+    Note that:
+    \begin{align*}
+        W \equiv A - (X'X)^{-1} X' \implies W X = \underbrace{AX}_{= I_n} - \underbrace{(X'X)^{-1} X' X}_{I_n} = 0
+    \end{align*}
+
+    Plug in the decomposed $A$ we derived in the previous slide in the conditional variance:
+    \begin{align*}
+        \operatorname{Var} (\tilde{\beta} \mid X) &= \sigma^2 A A'
+        \\
+        &= \sigma^2 (W + (X'X)^{-1} X') (W' + X (X'X)^{-1} )
+        \\
+        &= \sigma^2 [W W' + \underbrace{W X}_{=0} (X'X)^{-1} + (X'X)^{-1} \underbrace{X' W'}_{(WX)'=0} + (X'X)^{-1} ]
+        \\
+        &= \sigma^2 WW' + \sigma^2 (X'X)^{-1}
+        \\
+        &> \sigma^2 (X'X)^{-1}
+        \\
+        &= \operatorname{Var}(\hat{\beta}_{OLS} \mid X)
+    \end{align*}
+    
+\end{frame}
+
+\begin{frame}{General Var-Cov Matrix}
+
+    Let's now make a slight change and consider a model such that:
+    \begin{align*}
+        (GM3') \qquad \operatorname{Var}(\varepsilon \mid X) = \mathbb{E}[ \varepsilon \varepsilon' \mid X] = \Omega < \infty
+    \end{align*}
+
+    so we are not (necessarily) considering the homoskedastic case anymore. What is the variance of the OLS estimator in this case?
+    \begin{align*}
+        \operatorname{Var}(\hat{\beta}_{OLS} \mid X ) &\overset{GM1}{=} \operatorname{Var}( (X'X)^{-1} X' Y \mid X)
+        \\
+        \operatorname{Var}(\hat{\beta}_{OLS} \mid X ) &\overset{GM0}{=} (X'X)^{-1} X' \operatorname{Var}( \varepsilon \mid X) X (X'X)^{-1}
+        \\
+        \operatorname{Var}(\hat{\beta}_{OLS} \mid X ) &\overset{GM3'}{=} (X'X)^{-1} X' \Omega X (X'X)^{-1}
+    \end{align*}
+    
+    Is OLS best in this case? We will see this later in the course.
+    
+\end{frame}

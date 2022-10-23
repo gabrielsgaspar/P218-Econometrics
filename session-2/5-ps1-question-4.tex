@@ -1,0 +1,38 @@
+% Begin section ----------------------------------------------------------------
+\section{Question 4}
+
+% Only part --------------------------------------------------------------------
+\begin{frame}{Question 4}
+
+    This question is a lot of algebra and we won't go over all of it during this session. But keep in mind these formulas
+
+    \begin{align*}
+        \hat{\alpha} &= \bar{y} - \bar{x} \hat{\beta}
+        \\
+        \hat{\beta} &= \frac{\sum_{i=1}^n (x_i - \bar{x}) (y_i - \bar{y}) }{\sum_{i=1}^n (x_i - \bar{x})^2}
+    \end{align*}
+
+    Note that
+    \begin{align*}
+        \widehat{\operatorname{Var}} \begin{pmatrix} \hat{\alpha} \\ \hat{\beta} \end{pmatrix} &= s^2 \begin{bmatrix} n & n \bar{x} \\ n \bar{x} \sum_{i=1}^n x_i^2 \end{bmatrix}^{-1}
+        \\
+        &= \frac{SSR}{(n-2) \sum_{i=1}^n (x_i - \bar{x})^2} \begin{bmatrix} \frac{1}{n} \sum_{i=1}^n x_i^2 & - \bar{x} \\ - \bar{x} & 1 \end{bmatrix}
+    \end{align*}
+    
+\end{frame}
+
+\begin{frame}{Question 4}
+
+    Moreover,
+    \begin{align*}
+        R^2 &= \frac{\sum_{i=1}^n (\hat{y}_i - \bar{y})^2}{\sum_{i=1}^n (\hat{x}_i - \bar{x})^2}
+        \\
+        &= \hat{\beta} \frac{\sum_{i=1}^n (x_i - \bar{x})^2}{\sum_{i=1}^n (y_i - \bar{y})^2}
+        \\
+        &= 1 - \frac{SSR/(n-2)}{\sum_{i=1}^n (y_i - \bar{y})^2 / (n-1)}
+        \\
+        SSR &= (1 - R^2) \sum_{i=1}^n (y_i - \bar{y})^2
+    \end{align*}
+    
+\end{frame}
+

@@ -1,0 +1,70 @@
+% Document setup----------------------------------------------------------------
+\documentclass[10pt, xcolor=dvipsnames,compress]{beamer}
+\usetheme{Berlin}
+
+% Presentation setup------------------------------------------------------------
+\setbeamertemplate{footline}[frame number] % Include page number
+\beamertemplatenavigationsymbolsempty      % Remove navigation bar
+\usecolortheme{metropolis}
+
+\setbeamercolor{background canvas}{bg=white}
+\setbeamercolor{titlelike}{bg=white}
+\setbeamercolor{titlelike}{bg=white}
+\setbeamercolor{author}{bg=white}
+\setbeamercolor{institute}{bg=white}
+\setbeamercolor{date}{bg=white}
+
+% Title page in sections -------------------------------------------------------
+\AtBeginSection[]{
+  \begin{frame}
+    \vfill
+    \centering
+    \begin{beamercolorbox}[sep=8pt,center,shadow=false,rounded=true]{title}
+        \usebeamerfont{title}\insertsectionhead\par
+    \end{beamercolorbox}
+    \vfill
+  \end{frame}
+}
+
+% Import packages---------------------------------------------------------------
+\input{../packages.tex}
+
+
+% Define title -----------------------------------------------------------------
+\title{P218 Econometrics I}
+\subtitle{TA Session 2}
+\author{Gabriel Simões Gaspar}
+\institute{London Business School}
+\date{Fall 2022}
+
+% Start document ---------------------------------------------------------------
+\begin{document}
+
+% Title frame ------------------------------------------------------------------
+\maketitle
+
+% Outline frame ----------------------------------------------------------------
+\begin{frame}{Roadmap}
+    \tableofcontents
+\end{frame}
+
+% Gauss-Markov recap section ---------------------------------------------------
+\input{./1-gm-recap.tex}
+
+% Question 1 section -----------------------------------------------------------
+\input{./2-ps1-question-1.tex}
+
+% Question 2 section -----------------------------------------------------------
+\input{./3-ps1-question-2.tex}
+
+% Question 3 section -----------------------------------------------------------
+\input{./4-ps1-question-3.tex}
+
+% Question 4 section -----------------------------------------------------------
+\input{./5-ps1-question-4.tex}
+
+% Question 5 section -----------------------------------------------------------
+\input{./6-ps1-question-5.tex}
+
+% End document -----------------------------------------------------------------
+\end{document}

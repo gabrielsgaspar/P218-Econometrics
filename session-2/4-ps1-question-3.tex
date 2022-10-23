@@ -1,0 +1,113 @@
+% Begin section ----------------------------------------------------------------
+\section{Question 3}
+
+% Part (a) ---------------------------------------------------------------------
+\begin{frame}{Part (a)}
+
+    We can still compute the OLS estimator as always since our assumptions $GM0$ - $GM3$ still hold. Since we only have one observation $(y, x)$, we can plug this into our usual formula.
+    \begin{align*}
+        \hat{\beta}_{OLS} &\overset{GM0}{=} \frac{x y}{x^2} = \frac{y}{x}
+    \end{align*}
+
+    The unconditional mean of this estimator equals $\beta$. What assumption do we need in order to say that?
+    \begin{align*}
+        \mathbb{E}[\hat{\beta}_{OLS}] = \beta
+    \end{align*}
+
+    You need to use LIE to prove this.
+    
+\end{frame}
+
+\begin{frame}{Law of Total Variance}
+
+    To find the unconditional variance of this estimator, let's look at the Law of Total Variance. We know that the unconditional variance for a random variable $Y$ is given by:
+    \begin{align*}
+        \operatorname{Var}(Y) = \mathbb{E}[Y^2] - \mathbb{E}[Y]^2 \overset{LIE}{=} \mathbb{E} \Biggr[ \mathbb{E}[Y^2 \mid X] \Biggr] -  \mathbb{E} \Biggr[ \mathbb{E}[Y \mid X] \Biggr]^2
+    \end{align*}
+
+    But note that:
+    \begin{align*}
+        \mathbb{E}[Y^2] \overset{LIE}{=} \mathbb{E} \Biggr[ \mathbb{E}[Y^2 \mid X ]  \Biggr] &= \mathbb{E} \Biggr[ \operatorname{Var}(Y \mid X) + \mathbb{E}[Y \mid X ]^2 \Biggr]
+        \\
+        &= \mathbb{E} \Biggr[ \operatorname{Var}(Y \mid X) \Biggr] + \mathbb{E} \Biggr[ \mathbb{E}[Y \mid X ]^2 \Biggr]
+    \end{align*}
+
+    since the expectation of the sum is the sum of the expectation.
+    
+\end{frame}
+
+\begin{frame}{Law of Total Variance}
+
+    We can plug this back into the formula for the unconditional variance:
+    \begin{align*}
+        \operatorname{Var}(Y) &= \mathbb{E} \Biggr[ \operatorname{Var}(Y \mid X) \Biggr] + \overbrace{\mathbb{E} \Biggr[ \mathbb{E}[Y \mid X ]^2 \Biggr] - \mathbb{E} \Biggr[ \mathbb{E}[Y \mid X] \Biggr]^2}^{= \operatorname{Var}\Biggr( \mathbb{E} [Y\mid X] \Biggr)}
+        \\
+        &= \mathbb{E} \Biggr[ \operatorname{Var}(Y \mid X) \Biggr] +  \operatorname{Var}\Biggr( \mathbb{E} [Y\mid X] \Biggr)
+    \end{align*}
+    
+\end{frame}
+
+\begin{frame}{Part (a)}
+
+    Back to our problem. To find the unconditional variance of our OLS estimator, we can apply the Law of Total Variance:
+    \begin{align*}
+        \operatorname{Var}(\hat{\beta}_{OLS}) &= \mathbb{E} \Biggr[ \operatorname{Var}(\hat{\beta}_{OLS} \mid X) \Biggr] +  \operatorname{Var}\Biggr( \mathbb{E} [\hat{\beta}_{OLS} \mid X] \Biggr)
+        \\
+        &= \mathbb{E} \Biggr[ \sigma^2 (X'X)^{-1} \Biggr] +  \underbrace{\operatorname{Var} ( \beta )}_{=0}
+        \\
+        &= \sigma^2 \mathbb{E}\Biggr[ \frac{1}{x^2} \Biggr]
+        \\
+        &= \operatorname{Pr}(x = 1/5) \times \Biggr( \frac{5}{1} \Biggr)^2 + \operatorname{Pr}(x = 7/5) \Biggr( \frac{5}{7} \Biggr)^2
+        \\
+        &= \frac{625}{49}
+    \end{align*}
+    
+\end{frame}
+
+% Part (b) ---------------------------------------------------------------------
+\begin{frame}{Part (b)}
+
+    We are now considering the estimator $\tilde{\beta} = xy$. This is an unconditionally unbiased estimator for $\beta$
+    \begin{align*}
+        \mathbb{E} [\tilde{\beta}] &\overset{GM0}{=} \mathbb{E} [ x y \mid x]
+        \\
+        &\overset{LIE}{=} \mathbb{E} [ x^2 \beta ] + \mathbb{E} [ x \varepsilon ]
+        \\
+        &\overset{GM2}{=} \beta \mathbb{E}[x^2]
+    \end{align*}
+
+    But $\mathbb{E}[x^2] = \operatorname{Pr}(x = 1/5) \times \Biggr( \frac{1}{5} \Biggr)^2 + \operatorname{Pr}(x = 7/5) \Biggr( \frac{7}{5} \Biggr)^2 = 1$. This means that $\tilde{\beta}$ is conditionally unbiased for $\beta$.
+    
+\end{frame}
+
+\begin{frame}{Part (b)}
+
+    We can just plug in the estimator to find the variance:
+    \begin{align*}
+        \operatorname{Var}(\tilde{\beta}) &= \operatorname{Var}(xy)
+        \\
+        &= \operatorname{Var}(\beta x^2 + x \varepsilon)
+        \\
+        &= \beta^2 \operatorname{Var}(x^2) + \operatorname{Var}(x \varepsilon)
+        \\
+        &= \beta^2 \Biggr( \mathbb{E} [x^4] - \mathbb{E}[x^2]^2 \Biggr) + \underbrace{\mathbb{E}[x^2 \varepsilon^2]}_{\mathbb{E}[x^2] \mathbb{E}[\varepsilon^2]} - \underbrace{\mathbb{E}[x \varepsilon]^2}_{(\mathbb{E}[x] \mathbb{E}[\varepsilon])^2=0}
+        \\
+        &= \beta^2 \Biggr( \frac{1}{2} \times \frac{1}{625} + \frac{1}{2} \times \frac{2401}{625} - 1 \Biggr) + \sigma^2 \mathbb{E} [ x^2]
+        \\
+        &= \beta^2 \frac{576}{625} + 1
+    \end{align*}
+    
+\end{frame}
+
+
+% Part (c) ---------------------------------------------------------------------
+\begin{frame}{Part (c)}
+
+    If the true $\beta = 0$ our variances will be:
+    \begin{align*}
+        \operatorname{Var}(\tilde{\beta}) = 1 < \frac{625}{49} = \operatorname{Var}(\hat{\beta}_{OLS})
+    \end{align*}
+
+    The OLS estimator does not have minimum variance in this case. What is going on? Does the Gauss-Markov Theorem not hold?
+    
+\end{frame}
