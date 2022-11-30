@@ -1,0 +1,92 @@
+% Begin section ----------------------------------------------------------------
+\section{Question 4}
+
+% Part (a) ---------------------------------------------------------------------
+\begin{frame}{Part (a)}
+
+   For a regression with no intercept, we can find the formula for the OLS estimator by minimizing the sum of square errors
+   \begin{align*}
+       \hat{\beta}_{OLS} = \arg \min_\beta \sum_{i=1}^n (y_i - \beta x_i)^2 \implies \hat{\beta}_{OLS} = \frac{\sum_{i=1}^n x_i y_i}{\sum_{i=1}^n x_i^2}
+   \end{align*}
+
+   Plug in the true model to get
+   \begin{align*}
+       \hat{\beta}_{OLS} = \beta + \frac{\sum_{i=1}^n x_i \varepsilon_i}{\sum_{i=1}^n x_i^2}
+   \end{align*}
+   
+\end{frame}
+
+\begin{frame}{Part (a)}
+    Consider the case where we have an even $n$ observations. This means that
+    \begin{align*}
+        \sum_{i=1}^n x_i^2 &= \sum_{j=1}^{n/2} (2 j)^2 = \frac{n (n/2 + 1)(n+1)}{3}
+        \\
+        \sum_{i=1}^n x_i \varepsilon_i &= \sum_{j=1}^{n/2} 2j \varepsilon_{2j} \sim \mathcal{N} \Biggr( 0, \frac{n (n/2 + 1)(n+1)}{3} \Biggr)
+    \end{align*}
+    where the last equality is true since this is just a sum of i.i.d. $\varepsilon_{2j}$, which is $\mathcal{N}(0,1)$.
+\end{frame}
+
+\begin{frame}{Part (a)}
+    This means that our OLS estimator is consistent since
+    \begin{align*}
+        \hat{\beta}_{OLS} \sim \mathcal{N} \Biggr( \beta, \frac{3}{n (n/2 + 1)(n+1)} \Biggr)
+    \end{align*}
+
+    And
+    \begin{align*}
+        \frac{3}{n (n/2 + 1)(n+1)} \rightarrow 0
+    \end{align*}
+    
+    This means that $\operatorname{Pr}(| \hat{\beta}_{OLS} - \beta |) > \delta, \forall \delta > 0$ converges to zero by Chebyshev's inequality.
+    
+\end{frame}
+
+% Part (b) ---------------------------------------------------------------------
+\begin{frame}{Part (b)}
+
+   Now you are told that $x_i = \lambda^i$, for $\mid \lambda \mid < 1$. Now, we will have that
+   \begin{align*}
+       \sum_{i=1}^n x_i^2 = \sum_{i=1}^n \lambda^{2i} = \frac{\lambda^2 - \lambda^{2(n+1)}}{1 - \lambda^2}
+   \end{align*}
+
+   This means that
+   \begin{align*}
+       \frac{\sum_{i=1}^n x_i \varepsilon_i}{\sum_{i=1}^n x_i^2} &\sim \mathcal{N} \Biggr ( 0, \Biggr[ \sum_{i=1}^n x_i^2 \Biggr]^{-1} \Biggr)
+       \\
+       &\sim \mathcal{N} \Biggr( 0, \frac{1 - \lambda^2}{\lambda^2 - \lambda^{2(n+1)}} \Biggr)
+   \end{align*}
+
+   This variance does not converge to zero as $n \rightarrow \infty$. Does that mean that our OLS estimator is not consistent?
+   
+\end{frame}
+
+% Part (c) ---------------------------------------------------------------------
+\begin{frame}{Part (c)}
+
+    Do the GM assumptions hold in this case?
+    \begin{itemize}
+        \item $\operatorname{rank}(X) = m$ ?
+        \item $\mathbb{E}[Y \mid X] = X \beta \iff \mathbb{E}[\varepsilon \mid X] = 0$ ?
+        \item $\operatorname{Var}(Y \mid X) = \operatorname{Var}(\varepsilon \mid X) = \sigma^2 I_n$ ?
+    \end{itemize}
+
+    What about the fact that the estimator is not consistent in (b)?
+
+\end{frame}
+
+% Part (d) ---------------------------------------------------------------------
+\begin{frame}{Part (d)}
+
+    From part (b) we can get that as $n \rightarrow \infty$ we will have that
+    \begin{align*}
+        \frac{1 - \lambda^2}{\lambda^2 - \lambda^{2(n+1)}} \rightarrow \frac{1}{\lambda^2} - 1
+    \end{align*}
+
+    And so
+    \begin{align*}
+        \hat{\beta}_{OLS} \xrightarrow{d} \mathcal{N} \Biggr( \beta, \frac{1}{\lambda^2} - 1 \Biggr) 
+    \end{align*}
+
+    Can you give a more rigorous proof?
+
+\end{frame}

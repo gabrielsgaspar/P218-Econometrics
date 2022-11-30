@@ -1,0 +1,179 @@
+% Begin section ----------------------------------------------------------------
+\section{Question 2}
+
+% Part (a) ---------------------------------------------------------------------
+\begin{frame}{Part (a)}
+    
+    This generates a long output since there will be a dummy for each category of the education and experience variables (check R code for results). R automatically drops the first dummies of education and experience. Why is that? Should we drop any other dummies?
+    
+\end{frame}
+
+% Part (b) ---------------------------------------------------------------------
+\begin{frame}{Part (b)}
+
+    We want to test the null hypothesis that
+    \begin{align*}
+        H_0: R \alpha = q
+    \end{align*}
+
+    where $\alpha$ is the vector of coefficients being estimated such that $\alpha$ would lead to the linear specification
+    \begin{align*}
+        \mathbb{E} [lwage \mid educ, exper] = \beta_0 + \beta_1 \times educ + \beta_2 \times exper + \beta_3 \times exper^2 
+    \end{align*}
+
+    We want to model the CEF of log-wage for the population of people having a given education and experience level.
+    
+\end{frame}
+
+\begin{frame}{Part (b)}
+
+    Imagine we want to look at a population with education levels ranging from $0$ to $p$ and with experience levels ranging from $0$ to $g$. We will then have an unrestricted and a restricted model.
+
+    Our unrestricted model can be found using the regression we used in part (a) as
+    \begin{align*}
+        lwage = \kappa &+ \delta_1 \times educ_1 + \delta_2 \times educ_2 + \cdots + \delta_p \times educ_p
+        \\
+        &+ \gamma_1 \times exper_1 +  \gamma_2 \times exper_2 + \cdots + \gamma_g \times exper_g + \varepsilon 
+    \end{align*}
+    where $educ_i$ and $exper_j$ are dummies for different levels of education and experience.
+    
+\end{frame}
+
+\begin{frame}{Part (b)}
+
+    Similarly, we will have that our restricted model is
+    \begin{align*}
+        lwage = \beta_0 + \beta_1 \times educ + \beta_2 \times exper + \beta_3 \times exper^2 + \varepsilon    
+    \end{align*}
+
+    We would then expect that for an individual with education level $i$ and experience level $j$ the predicted wage from both specifications must equal
+    \begin{align*}
+        \kappa + \delta_i + \gamma_j = \beta_0 + \beta_1 \times i + \beta_2 \times j + \beta_3 \times j^2
+    \end{align*}
+
+    This should hold for all $i = 0, \cdots, p$ and all $j = 0, \cdots, g$. What happened to $\delta_0$ and $\gamma_0$?
+
+\end{frame}
+
+\begin{frame}{Part (b)}
+
+    From the previous relation we can pin down the coefficients of the restricted model. Note that when $i = j = 0$ we will have that
+    \begin{align*}
+        \kappa = \beta_0
+    \end{align*}
+    
+    Similarly, for $i \neq 0$ and $j = 0$
+    \begin{align*}
+        \delta_i = \beta_1 \times i
+    \end{align*}
+    
+    And if $i = 0$ and $j \neq 0$
+    \begin{align*}
+        \gamma_j = \beta_2 \times j + \beta_3 \times j^2
+    \end{align*}
+    
+\end{frame}
+
+\begin{frame}{Part (b)}
+
+    In particular, $\gamma_1 = \beta_2 + \beta_3$ and $\gamma_2 = 2 \beta_2 + 4 \beta_3$. This means that
+    \begin{align*}
+        \beta_2 &= \frac{4 \gamma_1 - \gamma_2}{2}
+        \\
+        \beta_3 &= \frac{\gamma_2 - 2 \gamma_1}{2}
+    \end{align*}
+
+    Note that
+    \begin{align*}
+        \alpha = \begin{bmatrix}
+                    \kappa & \delta_1 & \delta_2 & \cdots & \delta_p & \gamma_1 & \gamma_2 & \cdots & \gamma_g
+                \end{bmatrix}'
+    \end{align*}
+
+    which is a $(1 + p + g) \times 1$ column vector.
+    
+\end{frame}
+
+\begin{frame}{Part (b)}
+
+    We can summarize the relations between the coefficients in $\alpha$ and the $\beta$'s from the restricted model in $R \alpha = q$. This leads us to the following:
+    \begin{align*}
+        R = \begin{bmatrix}
+            \mathbf{A} & \mathbf{0} \\
+            \mathbf{0} & \mathbf{B}
+        \end{bmatrix}
+    \end{align*}
+    
+    where $\mathbf{A}$ and $\mathbf{B}$ are, respectively, $(p - 3) \times (p + 1)$ and $g \times g$ matrices. How do we find those? What is $q$ in this case?
+    
+\end{frame}
+
+\begin{frame}{Part (b)}
+
+    A simple alternative is to set
+    \begin{align*}
+        \mathbf{A} = \begin{bmatrix}
+                        0 & -2 & 1 & 0 & \cdots & 0 \\
+                        0 & -3 & 0 & 1 & \cdots & 0 \\
+                        \vdots & \vdots & \vdots & \vdots &\ddots & \vdots\\
+                        0 & -p & 0 & 0 & \cdots &  1
+                    \end{bmatrix}
+    \end{align*}
+
+    And
+    \begin{align*}
+        \mathbf{B} = \begin{bmatrix}
+                    3 & -3 & 1 & 0 & \cdots & 0 \\
+                    8 & -6 & 0 & 1 & \cdots & 0 \\
+                    \vdots & \vdots & \vdots & \vdots & \ddots & \vdots \\
+                    -2g + g^2 & \frac{g - g^2}{2} & 0 & 0 & \cdots & 1
+                    \end{bmatrix}
+    \end{align*}
+
+    Why does this work? Can we compute the F-statistic?
+    
+\end{frame}
+
+\begin{frame}{Part (b)}
+
+    What we can do is model the CEF of log-wage for the population of individuals with only those education and experience levels that we observe. If we assume that $\alpha$ is now a vector where we have dropped $\delta_2$, $\delta_5$, $\delta_6$ and $\delta_{20}$ (why?) and $\gamma_{21}$, $\gamma_{23}$ and $\gamma_{24}$ (why?), we can test the hypothesis.
+
+    If we had data for each level of education and experience, we would be testing $20 + 25 - 3 = 42$ restrictions. Now, we have $(20 - 4) + (25 - 3) - 3 = 35$ restrictions on the specification of the CEF. The F-test is
+    \begin{align*}
+        F = \frac{(RSS_R - RSS_U)/35}{RSS_U/(1500 - 39)} = \frac{(987.21 - 958.3)/35}{958.3/1461} \approx 1.26 \sim F(35, 1461)
+    \end{align*}
+
+    Since the $0.95$ critical value distribution is $1.4311$ we cannot reject the null. 
+\end{frame}
+    
+
+% Part (c) ---------------------------------------------------------------------
+\begin{frame}{Part (c)}
+    
+    Now we want to test the assumption that
+    \begin{align*}
+        \mathbb{E}[wage \mid educ, exper] = \beta_0 + \beta_1 \times educ + \beta_2 \times exper + \beta_3 \times exper^2
+    \end{align*}
+
+    To do that proceed as follows:
+    \begin{enumerate}
+        \item Regress wage on the dummies for education and experience and get $RSS_U$
+        \item Regress wage on constant, education, experience and experience square and get $RSS_R$
+        \item Calculate the F-test
+    \end{enumerate}
+
+    If you did everything correctly you should have
+    \begin{align*}
+        F = \frac{(RSS_R - RSS_U)/35}{RSS_U/(1500 - 39)} = \frac{(2.7406 - 2.6050)/35}{2.6050/1461} \approx 2.17 \sim F(35, 1461)
+    \end{align*}
+
+    This is larger than the $95\%$ quantile, so the restriction can be rejected. What does this mean?
+    
+\end{frame}
+
+% Part (d) ---------------------------------------------------------------------
+\begin{frame}{Part (d)}
+    
+    Is this methodology a good way of testing the assumption of a linear conditional expectation function?
+    
+\end{frame}

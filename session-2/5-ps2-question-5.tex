@@ -1,0 +1,181 @@
+% Begin section ----------------------------------------------------------------
+\section{Question 5}
+
+% Part (a) ---------------------------------------------------------------------
+\begin{frame}{Part (a)}
+
+   The question tells us that a random sample is taken from the exponential distribution with density
+   \begin{align*}
+       f_\theta(y) = \frac{1}{\sqrt{\theta}} \exp(-y_i / \sqrt{\theta}), \qquad \text{for } y > 0
+   \end{align*}
+
+   We know that the Fisher's Information can be found by
+   \begin{align*}
+       \mathcal{I}(\theta) = \operatorname{Var} \Biggr( \frac{d}{d\theta} \sum_{i=1}^n \log (f_\theta(y)) \Biggr) = - \mathbb{E} \Biggr[ H(\theta) \Biggr]
+   \end{align*}
+
+   where $H(\theta)$ is the Hessian matrix of second derivatives of the log of $f_\theta(y)$
+   
+\end{frame}
+
+\begin{frame}{Part (a)}
+    We have all the ingredients, so let's compute this!
+    \begin{align*}
+        \mathcal{L}(\theta) &= \prod_{i=1}^n \frac{1}{\sqrt{\theta}} \exp(-y_i / \sqrt{\theta})
+        \\
+        &= \frac{1}{\theta^{n/2}} \exp \Biggr( -\sum_{i=1}^n y_i / \sqrt{\theta} \Biggr)
+    \end{align*}
+
+    Defining $L(\theta) = \log (\mathcal{L}(\theta))$ we then have that
+    \begin{align*}
+        L(\theta) = - \frac{n}{2}\log(\theta) - \frac{\sum_{i=1}^n y}{\sqrt{\theta}} \implies \frac{d^2}{d \theta^2} L(\theta) = \frac{n}{2 \theta^2} - \frac{3}{4} \frac{\sum_{i=1}^n y}{\theta^{5/2}}
+    \end{align*}
+    
+\end{frame}
+
+\begin{frame}{Part (a)}
+    Finally, we have
+    \begin{align*}
+        \mathcal{I}(\theta) &= - \mathbb{E} \Biggr[ \frac{d^2}{d \theta^2} L(\theta) \Biggr]
+        \\
+        &= - \frac{n}{2\theta^2} + \frac{3}{4\theta^{5/2}} \mathbb{E} \Biggr[ \sum_{i=1}^n y_i \Biggr]
+        \\
+        &= - \frac{n}{2\theta^2} + \frac{3}{4\theta^{5/2}} n \sqrt{\theta}
+        \\
+        &= \frac{n}{4 \theta^2}
+    \end{align*}
+    
+\end{frame}
+
+% Part (b) ---------------------------------------------------------------------
+\begin{frame}{Part (b)}
+
+   To find the MLE estimator we can simply solve
+   \begin{align*}
+       \hat{\theta}_{MLE} = \arg \max_\theta L(\theta)
+   \end{align*}
+
+   Taking the first-order conditions of the log-likelihood function:
+   \begin{align*}
+        \frac{d}{d \theta} L(\theta) = - \frac{n}{2\hat{\theta}_{ML}} +  \frac{\sum_{i=1}^n y_i}{2\hat{\theta}_{ML}^{3/2}} = 0
+        \iff \hat{\theta}_{MLE} = \Biggr( \frac{\sum_{i=1}^n y_i}{n} \Biggr)^2 = \bar{y}^2
+    \end{align*}
+   
+\end{frame}
+
+\begin{frame}{Part (b)}
+    To find the bias, we can take the expectation of our estimator
+    \begin{align*}
+        \mathbb{E} [\hat{\theta}_{MLE}] &= \frac{1}{n^2} \mathbb{E} \Biggr[ \Biggr(\sum_{i=1}^n y_i\Biggr)^2 \Biggr]
+    \end{align*}
+
+    But note that
+    \begin{align*}
+        \mathbb{E} \Biggr[ \Biggr(\sum_{i=1}^n y_i\Biggr)^2 \Biggr] &= \operatorname{Var}\Biggr( \sum_{i=1}^n y_i \Biggr) + \mathbb{E} \Biggr[  \sum_{i=1}^n y_i \Biggr]^2
+        \\
+        &= n \theta + (n \sqrt{\theta})^2
+    \end{align*}
+
+    Given the information the question gives us
+\end{frame}
+
+\begin{frame}{Part (b)}
+    So we have
+    \begin{align*}
+        \mathbb{E} [\hat{\theta}_{MLE}] = \frac{n \theta + n^2 \theta}{n^2} = \Biggr( \frac{1 + n}{n} \Biggr) \theta
+    \end{align*}
+
+    The bias is then
+    \begin{align*}
+        \mathbb{E} [\hat{\theta}_{MLE}] - \theta = \frac{\theta}{n}
+    \end{align*}
+    
+\end{frame}
+
+% Part (c) ---------------------------------------------------------------------
+\begin{frame}{Part (c)}
+
+    Uh oh! Our model is misspecified and the sample actually comes from a $\chi^2(1)$ with density
+    \begin{align*}
+        g(y) = \frac{1}{\sqrt{2 \pi y}} \exp( - y/2), \qquad \text{for } y > 0
+    \end{align*}
+    
+    We can try to approximate the expected log-likelihood given that the true density is $g(\cdot)$ using our sample analogue as:
+    \begin{align*}
+        \mathbb{E}_{\hat{g}}[\log f_\theta(y)] \approx \frac{1}{n} \sum_{i=1}^n \log f_\theta(y) = \frac{1}{n} L(\theta)
+    \end{align*}
+
+\end{frame}
+
+\begin{frame}{Part (c)}
+    But given that $y_i$ is i.i.d. and its first moment is finite, Khinchine's LLN gives that our sample average approaches the expected value in probability:
+    \begin{align*}
+        \frac{1}{n} L(\theta) \xrightarrow{p} \mathbb{E}_g[\log f_\theta(y)]
+    \end{align*}
+    Given (regularity conditions) this becomes:
+    \begin{align*}
+         \hat{\theta}_{ML} = \arg \max_{\theta} \frac{1}{n} L(\theta) \xrightarrow{p} \arg \max_{\theta} \mathbb{E}_g[\log f_\theta(y)]
+    \end{align*}
+
+    What is the value? By Kinchine's LLN $\bar{y}$ converges in probability to the mean of $\chi^2(1)$, which is $1$. So by the continuous mapping theorem $\bar{y}^2$ converges to $1^2 = 1$.
+    
+\end{frame}
+
+% Part (d) ---------------------------------------------------------------------
+\begin{frame}{Part (d)}
+
+    We are interested in finding
+    \begin{align*}
+        \tilde{\theta} = \arg \min_\theta \int_0^\infty g(y) \log \frac{g(y)}{f_\theta (y)} dy = \arg \max_\theta \int_0^\infty g(y) \log( f_\theta(y)) dy
+    \end{align*}
+
+    We can plug in the values for $g(y)$ and $\log (f_\theta)(y)$:
+    \begin{align*}
+        \int_0^\infty g(y) \log( f_\theta(y)) dy &= \int_0^\infty \frac{1}{\sqrt{2\pi y}} \exp(-y/2) (- \log \sqrt{\theta} - y /\sqrt{\theta}) dy
+        \\
+        &= - \log \sqrt{\theta} - \frac{1}{\sqrt{\theta}}
+    \end{align*}
+
+\end{frame}
+
+\begin{frame}{Part (d)}
+    Take the first-order condition of the previous equation and we find that $\tilde{\theta} = 1$, just as in (c)! Why?
+\end{frame}
+
+% Part (e) ---------------------------------------------------------------------
+\begin{frame}{Part (e)}
+
+    We will have the following:
+    \begin{align*}
+        - \mathbb{E}\Biggr[ \frac{d^2}{d\theta^2}\log f_\theta(y_i) \Biggr] &= - \mathbb{E} \Biggr[ \frac{1}{2 \theta^2} - \frac{3 y_i}{4 \theta^{5/2}}\Biggr]
+        \\
+        &= - \frac{1}{2 \theta^2} + \frac{3}{4 \theta^{5/2}} \mathbb{E}_{g}[ y_i]
+        \\
+        &= - \frac{1}{2 \theta^2} + \frac{3}{4 \theta^{5/2}}
+    \end{align*}
+    where above we use the fact that the mean of a $\chi^2(1) = 1$.
+
+\end{frame}
+
+\begin{frame}{Part (e)}
+
+    For the variance, we can compute:
+    \begin{align*}
+        \operatorname{Var}\Biggr( \frac{d}{d\theta} \log f_\theta(y_i) \Biggr) &= \operatorname{Var}\Biggr( - \frac{1}{2 \theta} + \frac{y_i}{2 \theta^{3/2}}\Biggr)
+        \\
+        &= \frac{1}{4 \theta^3} \operatorname{Var}_{g}(y_i)
+        \\
+        &= \frac{1}{2 \theta^3}
+    \end{align*}
+    where above we use the fact that the variance of a $\chi^2(1) = 2$.
+
+\end{frame}
+
+\begin{frame}{Part (e)}
+    This shows us that:
+    \begin{align*}
+        - \mathbb{E}\Biggr[ \frac{d^2}{d\theta^2}\log f_\theta(y_i) \Biggr] < \operatorname{Var}\Biggr( \frac{d}{d\theta} \log f_\theta(y_i) \Biggr), \forall \theta > 0
+    \end{align*}
+    What would happen if $f$ was the true distribution?
+    
+\end{frame}

@@ -1,0 +1,126 @@
+% Begin section ----------------------------------------------------------------
+\section{Question 1}
+
+% Part (a) ---------------------------------------------------------------------
+\begin{frame}{Part (a)}
+    
+    We can start by noting that:
+    \begin{align*}
+        f_{x_T, \cdots, x_1 \mid x_0} = \frac{f_{x_T, \cdots, x_0}}{f_{x_0}}
+    \end{align*}
+    
+    But we have that:
+    \begin{align*}
+        f_{x_T, \cdots, x_0} &= f_{x_T \mid x_{T-1}, \cdots, x_0} f_{x_{T-1}, \cdots, x_0}
+        \\
+        f_{x_{T-1}, \cdots, x_0} &= f_{x_{T-1} \mid x_{T-2}, \cdots, x_0} f_{x_{T-2}, \cdots, x_0}
+        \\
+        f_{x_{T-2}, \cdots, x_0} &= f_{x_{T-2} \mid x_{T-3}, \cdots, x_0} f_{x_{T-3}, \cdots, x_0}
+        \\
+        &\cdots
+        \\
+        f_{x_1, x_0} &= f_{x_1 \mid x_0} f_{x_0}
+    \end{align*}
+    
+\end{frame}
+
+\begin{frame}{Part (a)}
+    We can plug this into the first equation to get:
+    \begin{align*}
+        f_{x_T, \cdots, x_1 \mid x_0} &= \frac{ f_{x_T, \cdots, x_0}  f_{x_{T-1}, \cdots, x_0} \cdots f_{x_0}}{f_{x_0}}
+        \\
+        &=  f_{x_T, \cdots, x_0}  f_{x_{T-1}, \cdots, x_0}
+        \\
+        &= \prod_{t=1}^T f_{x_t \mid x_{t-1} \cdots x_0}
+    \end{align*}
+        
+\end{frame}
+
+% Part (b) ---------------------------------------------------------------------
+\begin{frame}{Part (b)}
+
+    The likelihood function will be:
+    \begin{align*}
+        \mathcal{L} = \prod_{t=1}^T \frac{1}{\sqrt{2 \pi \sigma^2}}\exp \left\{ - \frac{(x_t - x_{t-1} - \delta)^2}{2 \sigma^2} \right\}
+    \end{align*}
+    
+    So log-likelihood becomes:
+    \begin{align*}
+        L = \log (\mathcal{L}) = - \frac{T}{2} \log (2 \pi) - \frac{T}{2} \log (\sigma^2) - \frac{1}{2} \sum_{t=1}^T \frac{(x_t - x_{t-1} - \delta)^2}{\sigma^2}
+    \end{align*}
+    
+\end{frame}
+
+\begin{frame}{Part (b)}
+    
+    We get the following FOC for $\delta$:
+    \begin{align*}
+        \frac{\partial L}{\partial \delta} = \sum_{t=1}^T (x_t - x_{t-1} - \hat{\delta}_{MLE}) &= 0
+        \\
+        T \hat{\delta}_{MLE} &= \sum_{t=1}^T x_t - x_{t-1}
+        \\
+        T \hat{\delta}_{MLE} &= x_1 - x_0 + x_2 - x_1 + \cdots x_T - x_{T-1}
+        \\
+        \hat{\delta}_{MLE} &= \frac{x_T}{T}
+    \end{align*}
+    
+\end{frame}
+
+\begin{frame}{Part (b)}
+    
+    And for $\sigma^2$:
+    \begin{align*}
+        \frac{\partial L}{\partial \sigma^2} = \sum_{t=1}^T \frac{(x_t - x_{t-1} - \hat{\delta}_{MLE})^2}{2 \hat{\sigma}_{MLE}^4} - \frac{T}{2 \hat{\sigma}_{MLE}^2} &= 0
+        \\
+        \sum_{t=1}^T (x_t - x_{t-1} - \frac{x_T}{T})^2 = T \hat{\sigma}_{MLE}^2
+        \\
+        \hat{\sigma}_{MLE}^2 = \frac{1}{T} \sum_{t=1}^T (x_t - x_{t-1} - \frac{x_T}{T})^2
+    \end{align*}
+    
+\end{frame}
+
+% Part (c) ---------------------------------------------------------------------
+\begin{frame}{Part (c)}
+    
+    We can check the lowest variance of $\delta$ by finding the inverse of the Fisher information matrix. In this case, that is simply:
+    \begin{align*}
+        \left( \mathcal{I}(\delta) \right)^{-1} &= \left( - \operatorname{E}\left[ \frac{\partial^2 L}{\partial \delta^2} \right] \right)^{-1}
+        \\
+        &= \left( T \right)^{-1}
+        \\
+        &= \frac{1}{T}
+    \end{align*}
+    
+\end{frame}
+
+% Part (d) ---------------------------------------------------------------------
+\begin{frame}{Part (d)}
+    
+    Check code for solution. You should get:
+    \begin{align*}
+        \hat{\delta}_{MLE} &\approx 0.0055
+        \\
+        \hat{\sigma}_{MLE} &\approx 0.0422
+    \end{align*}
+    
+\end{frame}
+
+% Part (e) ---------------------------------------------------------------------
+\begin{frame}{Part (d)}
+    
+    Now we are told that
+    \begin{align*}
+        y_t = \alpha + \beta x_t + \varepsilon_t
+    \end{align*}
+
+    and all $\varepsilon_i$ are i.i.d. random variables distributed as $\mathcal{N}(0, \gamma^2)$ and independent from $x_i$. Does this model satisfy the GM assumptions?
+
+    \begin{itemize}
+        \item GM1 : matrix $X$ will have rank 2.
+        \item GM2: $\mathbb{E}[\varepsilon \mid X] = 0$ since $\varepsilon$ is independent from $X$.
+        \item GM3: $\operatorname{Var}(\varepsilon \mid X) = \gamma^2 I_T$ by assumption.
+    \end{itemize}
+
+    But $(y_t, x_t)$ are not i.i.d. across $t = 1, \cdots, T$. Do we need to assume random sample for GM? How would you test the hypothesis that $\beta = 1$? if $T=3$? Does GM4 hold?
+    
+\end{frame}

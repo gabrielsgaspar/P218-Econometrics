@@ -1,9 +1,9 @@
 #!/usr/bin/Rscript
 
-#' This script contains the answers in R for question 1 of Problem Set 2. For
+#' This script contains the answers in R for question 1 of Problem Set 1. For
 #' the interpretation of the results here, please look at the answer sheet.
 #' 
-#' Last update: 09/11/2022
+#' Last update: 20/10/2022
 #' By: @gabrielsgaspar
 
 
@@ -13,14 +13,14 @@
 
 # Clean environment change working directory
 rm(list=ls())
-setwd("/Users/gabrielsgaspar/Library/CloudStorage/OneDrive-LondonBusinessSchool/Teaching/P218-Econometrics/session-3/code")
-#setwd("C:\\Users\\gsimoesgaspar\\OneDrive - London Business School\\Teaching\\P218-Econometrics\\session-3\\code")
+setwd("/Users/gabrielsgaspar/Library/CloudStorage/OneDrive-LondonBusinessSchool/Teaching/P218-Econometrics/session-2/code")
+#setwd("C:\\Users\\gsimoesgaspar\\OneDrive - London Business School\\Teaching\\P218-Econometrics\\session-2\\code")
 
 # Create resources folder if it does not exist already
 if (file.exists("../resources")==FALSE){dir.create("../resources")}
 
 # Define a vector of packages that the script will use
-pkgs_required <- c("haven", "readxl", "stargazer", "tidyverse")
+pkgs_required <- c("tidyverse")
 pkgs_install  <- pkgs_required[!(pkgs_required %in% installed.packages()[,"Package"])]
 
 # If any package is not already install then install it in machine
@@ -31,22 +31,30 @@ if (length(pkgs_install) > 0) {
 # Import necessary packages
 invisible(lapply(pkgs_required, library, character.only=TRUE))
 
-# Set seed
-set.seed(9)
 
 ################################################################################
-################################### Part (d) ###################################
+################################### Part (b) ###################################
 ################################################################################
 
-# Read data
-data <- read_excel("../data/SP500Index.xlsx", col_names=c("date", "sp500"), skip=1)
+# Define function for ACE(x)
+ACE  <- function(x) (5-6*x^2)/(3*(x+1))
 
-# Create x_t = log(SP_t / SP_0) variable
-data <- data %>% mutate(x = log(sp500/first(sp500)))
+# Create plot
+ggplot() +
+geom_density() +
+xlim(0, 2) +
+geom_function(fun = ACE, colour = "red") + 
+labs(x="Rain",
+     y="ACE") +
+theme_bw() +                        # Use black and white theme
+theme(text             = element_text(size=12),
+      axis.line        = element_line(colour="black"),
+      axis.text        = element_text(size=12),
+      plot.title       = element_text(hjust=0.5),
+      panel.grid.minor = element_blank(),
+      panel.border     = element_blank(),
+      legend.title     = element_blank())
 
-# Define time periods
-TT <- nrow(data)-1
+# Save plot
+ggsave("../resources/question-1-b.png")
 
-# Get MLE estimators
-delta_MLE <- last(data$x) / TT
-sigma_MLE <- sqrt( (1/TT) * sum((data$x - lag(data$x, 1) - delta_MLE)^2, na.rm=TRUE))
