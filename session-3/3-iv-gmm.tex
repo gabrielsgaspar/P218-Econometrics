@@ -1,0 +1,64 @@
+% Begin section ----------------------------------------------------------------
+\section{IV \& GMM}
+
+% GMM vs IV ---------------------------------------------------------------------
+\begin{frame}{Setup}
+    Consider the canonical setup for IV
+    \begin{align*}
+        Y_i &= X_i \beta + W_i \gamma_1 + \varepsilon_i
+        \\
+        X_i &= Z_i \pi + W_i \gamma_2 + u_i
+    \end{align*}
+    where $X_i$ is our endogenous regressor and $Z_i$ is our instrument. As always, we need the following assumptions in this setup:
+    \begin{itemize}
+        \item Relevance: $\pi \neq 0$
+        \item Exclusion: $\mathbb{E}[\varepsilon_i Z_i \mid W_i] = 0$
+    \end{itemize}
+
+    \vspace{2em}
+    
+    I can also write the exclusion restriction as $\mathbb{E}[\varepsilon_i Z_i^*] = 0$. What would $Z_i^*$ be in this case? And what does this mean?
+\end{frame}
+
+\begin{frame}{A System of Equations}
+    Alternatively, we can write the canonical setup as system of $K$ equations
+    \begin{align*}
+        \mathbb{E}[(Y_i - X_i \beta + W_i \gamma_1) Z_i] &= 0
+        \\
+        \mathbb{E}[(Y_i - X_i \beta + W_i \gamma_1) W_i] &= 0
+    \end{align*}
+    The first equation is simply the exclusion restriction. What does the second equation tell us?
+
+    \vspace{2em}
+    
+    Let $\tilde{X}_i \equiv \begin{bmatrix} X_i & W_i\end{bmatrix}$ and $\tilde{Z}_i \equiv \begin{bmatrix} Z_i & W_i \end{bmatrix}$, so we can write the system of linear equations simply as
+    \begin{align*}
+        \mathbf{g}(\beta, \gamma) = \mathbb{E}[(Y_i - \tilde{X}_i \tilde{\beta}) \tilde{Z}_i]
+    \end{align*}
+\end{frame}
+
+\begin{frame}{GMM}
+    Given this system of $K$ moments, for a positive-definite $K \times K$ weight matrix $\Omega$ our linear GMM estimator is simply
+    \begin{align*}
+        \hat{\beta}_{GMM} = \arg \min_{\tilde{\beta}} \mathbf{g}(\beta, \gamma)' \Omega \mathbf{g}(\beta, \gamma)
+    \end{align*}
+    This is equal to
+    \begin{align*}
+        \hat{\beta}_{GMM} = \frac{\tilde{X}'\tilde{Z} \Omega \tilde{Z}' Y}{\tilde{X}' \tilde{Z} \Omega \tilde{Z}' \tilde{X}}
+    \end{align*}
+    Plug in $\tilde{Y}$ above and we have that
+    \begin{align*}
+        \hat{\beta}_{GMM} - \tilde{\beta} = \frac{\tilde{X}'\tilde{Z} \Omega \tilde{Z}' \varepsilon}{\tilde{X}' \tilde{Z} \Omega \tilde{Z}' \tilde{X}} \xrightarrow[]{} 0
+    \end{align*}
+    What assumptions do we need for this to be true?
+\end{frame}
+
+\begin{frame}{GMM vs IV}
+    We can compare the GMM and the usual 2SLS estimator.
+    \begin{align*}
+        \hat{\beta}_{GMM} &= \frac{\tilde{X}'\tilde{Z} \Omega \tilde{Z}' Y}{\tilde{X}' \tilde{Z} \Omega \tilde{Z}' \tilde{X}}
+        \\
+        \hat{\beta}_{2SLS} &= \frac{\tilde{X}'\tilde{Z} (\tilde{Z}' \tilde{Z})^{-1} \tilde{Z}' Y}  {\tilde{X}' \tilde{Z} (\tilde{Z}' \tilde{Z})^{-1} \tilde{Z}' \tilde{X}}
+    \end{align*}
+    So the 2SLS estimator is just a special case of the GMM estimator when we use $\Omega = (\tilde{Z}' \tilde{Z})^{-1}$! Of course, we might be able to get a better weight matrix using fancy techniques as you saw in lecture. But if we have homoskedasticity, it turns out that $\Omega = (\tilde{Z}' \tilde{Z})^{-1}$ is optimal.
+\end{frame} 

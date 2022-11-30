@@ -1,0 +1,43 @@
+% Begin section ----------------------------------------------------------------
+\section{Exclusion Restriction}
+
+% Part (a) ---------------------------------------------------------------------
+\begin{frame}{Exclusion Restriction}
+
+    We saw that we need relevance and exclusion in order to compute our IV estimator. The exclusion restriction says that
+    \begin{align*}
+        \mathbb{E}[\varepsilon_i Z_i \mid W_i] = 0
+    \end{align*}
+    Can we test this? What if we use $\hat{\varepsilon}_i$ as a replacement for $\varepsilon_i$?
+    
+\end{frame}
+
+\begin{frame}{Exclusion Restriction}
+
+    The exclusion restriction is something that is untestable! So if you are using IV for one of your papers, you should motivate why this r estriction should hold.
+    
+    \vspace{2em}
+    
+    Let's think of a case where your instrument is virtually (near) random (e.g. a lottery, weather, etc.) and the relevance restriction is satisfied. Does that mean that we can take a deep breath and assume that the exclusion restriction holds?
+\end{frame}
+
+\begin{frame}{Three examples}
+
+    Let's discuss three examples:
+    \begin{enumerate}
+        \item The Vietnam War lottery: let $y_i$ be death, $viet_i$ is whether a person served in the Vietnam war and our instrument $z_i$ is their lottery number.
+        \item Rain as an instrument: let $y_i$ be conflict, $incom_i$ is income and $z_i$ is the amount of rain in location $i$.
+        \item Legal origin: let $y_i$ be some development indicator, $institut_i$ is the presence of some institution and $z_i$ is the legal origin of a given country.
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}{A Framework}
+
+    How can we think about the exclusion restriction then when reading a paper or doing our own research? Check out Angrist, Imbens and Rubin (1996) for proof:
+    \begin{align*}
+        \frac{\mathbb{E}[Y_i (1, D_i(1) - Y_i(0, D_i(0)]}{\mathbb{E}[D_i(1) - D_i(0)]} = &\mathbb{E}[Y_i (1, D_i(1) - Y_i(0, D_i(0) \mid i \text{ complier}]
+        \\
+        &+ \mathbb{E}[H_i \mid i \text{ non-complier}] \times \frac{\operatorname{Pr}(i \text{ non-complier})}{\operatorname{Pr}(i \text{ complier})}
+    \end{align*}
+    and $H_i = Y_i(1, d) - Y_i(0, d)$ where $d = 1$ for always-taker and $d=0$ for never-taker.
+\end{frame}

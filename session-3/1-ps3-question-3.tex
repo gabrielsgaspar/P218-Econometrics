@@ -1,0 +1,176 @@
+% Begin section ----------------------------------------------------------------
+\section{Question 3}
+
+% Part (a) ---------------------------------------------------------------------
+\begin{frame}{Part (a)}
+    
+    We are given that for $j \in \{1, 2\}$ independent samples we have that:
+    \begin{align*}
+        \bar{Y}_j &= \frac{1}{n_j} \sum_{i=1}^{n_j} Y_{ji}
+        \\
+        s^2_j &= \frac{1}{n_j - 1} \sum_{i=1}^{n_j} (Y_{ji} - \bar{Y}_j)^2
+    \end{align*}
+
+    The usual test under the assumption of normality to test $H_0: \sigma^2 = \sigma^2_2$ is to look at
+    \begin{align*}
+        s_1^2 / s_2^2 \sim F(n_1 - 1, n_2 - 2) 
+    \end{align*}
+    
+\end{frame}
+
+\begin{frame}{Part (a)}
+    
+    We want to prove that:
+    \begin{align*}
+        T = \Biggr( \frac{n_1 n_2}{n_1 + n_2} \Biggr)^{1/2} (\log s_1^2 - \log s_2^2) \xrightarrow{d} \mathcal{N}(0, 2)
+    \end{align*}
+
+    Note that
+    \begin{align*}
+        \log s_1^2 - \log s_2^2 = \log \Biggr( \frac{s_1^2}{s_2^2} \Biggr) \sim \log \Biggr( F(n_1 - 1, n_2 - 2) \Biggr)
+    \end{align*}
+
+    Remember that an $F$ distribution is just the ratio of two $\chi^2$ distributions divided by their degrees of freedom, so
+    \begin{align*}
+        \log \Biggr( F(n_1 - 1, n_2 - 2) \Biggr) \sim \log \Biggr( \frac{\chi^2(n_1 - 1)}{n_1 - 1} \Biggr) - \log \Biggr( \frac{\chi^2(n_2 - 1)}{n_2 - 1} \Biggr)
+    \end{align*}
+        
+\end{frame}
+
+\begin{frame}{Part (a)}
+
+    We know also by the CLT that
+    \begin{align*}
+        \frac{\chi^2 (n_1 - 1)}{n_1 - 1} \approx 1 + \frac{1}{\sqrt{n_1}} \mathcal{N}(0, 2)
+    \end{align*}
+
+    But we can use a Taylor expansion to show that
+    \begin{align*}
+        \log (1 + x) \approx x    
+    \end{align*}
+
+    So we will have that
+    \begin{align*}
+        \log \Biggr( \frac{\chi^2(n_1 - 1)}{n_1 - 1} \Biggr) \approx \frac{1}{\sqrt{n_1}} \mathcal{N}(0, 2)
+    \end{align*}
+    
+\end{frame}
+
+\begin{frame}{Part (a)}
+
+    Going back to the original expression we will have that
+    \begin{align*}
+        \log \Biggr( \frac{\chi^2(n_1 - 1)}{n_1 - 1} \Biggr) - \log \Biggr( \frac{\chi^2(n_2 - 1)}{n_2 - 1} \Biggr) &\approx \frac{1}{\sqrt{n_1}} \mathcal{N}_1(0, 2) + \frac{1}{\sqrt{n_1}} \mathcal{N}_2(0, 2)
+        \\
+        &= \mathcal{N} \Biggr( 0, 2 \times \frac{n_1 + n_2}{n_1 n_2} \Biggr)
+        \\
+        &= \Biggr( \frac{n_1 n_2}{n_1 + n_2} \Biggr)^{1/2} \mathcal{N} (0, 2)
+    \end{align*}
+    
+\end{frame}
+
+\begin{frame}{Part (a)}
+    Going back to the start and putting everything together we have
+    \begin{align*}
+        T &= \Biggr( \frac{n_1 n_2}{n_1 + n_2} \Biggr)^{1/2} (\log s_1^2 - \log s_2^2)
+        \\
+        &= \Biggr( \frac{n_1 n_2}{n_1 + n_2} \Biggr)^{1/2} \log \Biggr( F(n_1 - 1, n_2 - 2) \Biggr)
+        \\
+        &= \Biggr( \frac{n_1 n_2}{n_1 + n_2} \Biggr)^{1/2} \mathcal{N} \Biggr( 0, 2 \times \frac{n_1 + n_2}{n_1 n_2} \Biggr)
+        \\
+        &\xrightarrow{d} \mathcal{N} (0, 2)
+    \end{align*}
+    
+\end{frame}
+
+% Part (b) ---------------------------------------------------------------------
+\begin{frame}{Part (b)}
+
+    Given our formula for the variance estimator, we can manipulate the variance estimator as follows:
+    \begin{align*}
+        s_j^2 (n_j - 1) &= \sum_{i=1}^{n_j} (Y_{ij} - \mu_j - \bar{Y}_j + \mu_j)^2
+        \\
+        &= \sum_{i=1}^{n_j} ([Y_{ij} - \mu_j] - [\bar{Y}_j - \mu_j])^2
+        \\
+        &= \sum_{i=1}^{n_j} (Y_{ij} - \mu_j)^2 - 2 \sum_{i=1}^{n_j}([Y_{ij} - \mu_j][\bar{Y}_j - \mu_j]) + \sum_{i=1}^{n_j} (\bar{Y}_j - \mu_j)^2
+        \\
+        &= \sum_{i=1}^{n_j} (Y_{ij} - \mu_j)^2  -  n_j (\bar{Y}_j - \mu_j)^2
+    \end{align*}
+    where the last equality holds since $\sum_{i=1}^{n_j}(Y_{ij} - \mu_j) = 0$.
+    
+\end{frame}
+
+\begin{frame}{Part (b)}
+    
+    Given the manipulation above, we now turn our attention to finding the distribution of $\sqrt{n_j}(s_j^2 - \sigma_j^2)$. We can then to the following:
+    \begin{align*}
+        \sqrt{n_j}(s_j^2 - \sigma_j^2) &= \frac{\sqrt{n_j}}{n_j - 1} \sum_{i=1}^{n_j} (Y_{ij} - \mu_j)^2  - \frac{n_j}{n_j - 1} \sqrt{n_j} (\bar{Y}_j - \mu_j)^2 - \sqrt{n_j} \sigma^2
+        \\
+        &= \frac{n_j}{n_j - 1} \left( \sqrt{n_j} \left[ \frac{1}{n_j} \sum_{i=1}^{n_j} (Y_{ij} - \mu_j)^2 - \sigma_j^2 \right]  \right)
+        \\
+        &- \frac{n_j}{n_j - 1} \sqrt{n_j} (\bar{Y}_j - \mu_j)^2 - \frac{\sqrt{n_j}}{n_j - 1}\sigma_j^2 
+    \end{align*}
+    But note that as $n \rightarrow \infty$ we will have that $\frac{n_j}{n_j - 1} \rightarrow 1$ and that $\frac{\sqrt{n_j}}{n_j - 1} \sigma_j^2 \rightarrow 0$. We can then use Stlutsky's lemma to see that:
+    \begin{align*}
+        \sqrt{n_j} (\bar{Y}_j - \mu_j)^2 = \sqrt{n_j} (\bar{Y}_j - \mu_j)(\bar{Y}_j - \mu_j) \xrightarrow{p} 0
+    \end{align*}
+    
+\end{frame}
+
+\begin{frame}{Part (b)}
+    
+    Focusing on the first term of our expression of interest, we will have that given the central limit theorem:
+    \begin{align*}
+        \frac{n_j}{n_j - 1} \left( \sqrt{n_j} \left[ \frac{1}{n_j} \sum_{i=1}^{n_j} (Y_{ij} - \mu_j)^2 - \sigma_j^2 \right]  \right) \xrightarrow{d} \mathcal{N} (0, \sigma_j^4(\kappa_j - 1))
+    \end{align*}
+    Where $\kappa_j$ is the kurtosis from the distribution $G_j(y)$. And so:
+    \begin{align*}
+        \sqrt{n_j}(s_j^2 - \sigma_j^2) \xrightarrow{d} \mathcal{N} (0, \sigma_j^4(\kappa_j - 1))
+    \end{align*}
+    
+\end{frame}
+
+\begin{frame}{Part (b)}
+
+     Another element that we need to keep in mind for this question is the Delta method. Given a function $g(\cdot) = \log(\cdot)$, we will have that the following result is true by the Delta method:
+    \begin{align*}
+        \sqrt{n_j}(\bar{Y}_j - \mu_j) \xrightarrow{d} \mathcal{N} (0, \sigma_j^2) \implies \sqrt{n_j}(\log(\bar{Y}_j) - \log(\mu_j)) \xrightarrow{d} \mathcal{N} \left(0, \frac{\sigma_j^2}{\mu_j}\right)
+    \end{align*}
+    This means that, for our variables of interest, the following holds:
+    \begin{align*}
+        \sqrt{n_j}(\log(s^2_j) - \log(\sigma^2_j)) \xrightarrow{d} \mathcal{N} \left(0, \frac{\sigma_j^4}{\sigma_j^4}(\kappa_j - 1) \right) = \mathcal{N} \left(0, \kappa_j - 1 \right)
+    \end{align*}
+    This then implies that:
+    \begin{align*}
+        \log(s^2_j) \xrightarrow{d} \mathcal{N} \left(\log (\sigma^2_j), \frac{\kappa_j - 1}{n_j} \right)
+    \end{align*}
+    
+\end{frame}
+
+\begin{frame}{Part (b)}
+
+    Given the above, we then know that the distribution for our two samples $j \in \{1, 2 \}$ is then:
+    \begin{align*}
+        \log(s^2_1) - \log(s^2_2) \xrightarrow{d} \mathcal{N} \left(\log \left( \frac{\sigma^2_1}{\sigma^2_2} \right), \frac{n_2(\kappa_1 - 1) - n_1(\kappa_2 - 1) }{n_1  n_2} \right)
+    \end{align*}
+    But under the null hypothesis that $\sigma_1^2 = \sigma_2^2$ and that $\kappa_1 = \kappa_2 = \kappa$, this simplifies to:
+    \begin{align*}
+        \log(s^2_1) - \log(s^2_2) \xrightarrow{d} \mathcal{N} \left(0, \frac{(n_1 + n_2)(\kappa - 1)}{n_1  n_2} \right)
+    \end{align*}
+    Then our expression for $T$ becomes simply:
+      
+    \begin{equation*} 
+        T = \sqrt{\frac{n_1 n_2}{n_1 + n_2}} \left[ \log \left( s_1^2\right) - \log \left( s_2^2\right) \right]\xrightarrow{d} \mathcal{N} (0, \kappa - 1)        
+    \end{equation*}
+    
+\end{frame}
+
+% Part (c) ---------------------------------------------------------------------
+\begin{frame}{Part (c)}
+    
+    We can then see that the comparison of $s_1^2 / s_2^2$ to an $F$ distribution is asymptotically equivalent to comparing an $\mathcal{N}(0, \kappa - 1)$ random variable to a $\mathcal{N}(0, 2)$ distribution. When $\kappa = 5$ the asymptotic size of the test based on such a comparison is just
+    \begin{align*}
+        \operatorname{Pr}( \mathcal{N}(0, 4) \geq \sqrt{2} \times 1.64 \Biggr) = \operatorname{Pr} ( \mathcal{N}(0, 1) \geq 1.1597) = 0.1231
+    \end{align*}
+    
+\end{frame}

@@ -1,0 +1,161 @@
+% Begin section ----------------------------------------------------------------
+\section{IV Overview}
+
+% OVB --------------------------------------------------------------------------
+\begin{frame}{Omitted Variable Bias}
+    Imagine you want to estimate the following long regression
+    \begin{align*}
+        \mathbb{E}[y_i \mid 1, fam, educ, init] = \alpha_0 + \alpha_1 \times fam_i + \alpha_2 \times educ_i + \alpha_3 \times init_i
+    \end{align*}
+    but you don't have data on $init_i$. You can try to run the least-squares regression on the variables that you do have and the estimators will converge in probability to
+    \begin{align*}
+        \mathbb{E}[y_i \mid 1, fam, educ, init] = \beta_0 + \beta_1 \times fam_i + \beta_2 \times educ_i
+    \end{align*}
+    What is the relationship between the estimators in the two regressions above?
+\end{frame}
+
+\begin{frame}{Omitted Variable Bias}
+    Consider the auxiliary regression
+    \begin{align*}
+        \mathbb{E}[init_i \mid 1, fam_i, educ_i] = \gamma_0 + \gamma_1 \times fam_i + \gamma_2 \times educ_i
+    \end{align*}
+    The omitted variable formula gives us that
+    \begin{align*}
+        \beta_j = \alpha_j + \alpha_3 \times \gamma_j, \text{ for } j = 0, 1, 2
+    \end{align*}
+    How can we prove that? Running the short regression is a problem if $\alpha_3 \neq 0$ or if $\gamma_j \neq 0$, so we need to figure out a way around this.
+\end{frame}
+
+% Instrument --------------------------------------------------------------------
+\begin{frame}{Instrument}
+    Assume that we have another variable $sub_i$ which is the subsidy that individual $i$ receives. This variable observes the following two exclusion restrictions:
+    \begin{align*}
+        \mathbb{E}[y_i \mid 1, fam, sub, educ, init] &= \alpha_0 + \alpha_1 \times fam_i + \alpha_2 \times educ_i + \alpha_3 \times init_i
+        \\
+        \mathbb{E}[init_i \mid 1, fam, sub] &= \lambda_0 + \lambda_1 \times fam_i
+    \end{align*}
+    The first exclusion restriction says that $sub_i$ does not help to predict $y_i$ if added to the long regression. Why? The second tells us that $sub_i$ does not help to predict $init_i$ in a linear predictor with $fam_i$. Where am I going with this? What is the endogenous variable here?
+\end{frame}
+
+\begin{frame}{Instrument}
+    Let:
+    \begin{align*}
+        init_i &= \lambda_0 + \lambda_1 \times fam_i + \varepsilon_i
+        \\
+        y_i &= \alpha_0 + \alpha_1 \times fam_i + \alpha_2 \times educ_i + \alpha_3 \times init_i + u_i
+    \end{align*}
+    Combine both equations to get
+    \begin{align*}
+        y_i &= \alpha_0 + \alpha_1 \times fam_i + \alpha_2 \times educ_i + \alpha_3 \times (\lambda_0 + \lambda_1 \times fam_i + \varepsilon_i) + u_i
+        \\
+        &= \underbrace{(\alpha_0 + \alpha_3 \times \lambda_0)}_{\equiv \delta_0} + \underbrace{(\alpha_1 + \alpha_3 \times \lambda_1)}_{\equiv \delta_1} \times fam_i + \alpha_2 \times educ_i + \underbrace{(u_i + \alpha_3 \times \varepsilon_i)}_{\equiv v_i}
+    \end{align*}
+    Note then that we will have
+    \begin{align*}
+        \mathbb{E}[fam_i \cdot v_i] &= 0
+        \\
+        \mathbb{E}[sub_i \cdot v_i] &= 0
+    \end{align*}
+\end{frame}
+
+\begin{frame}{Instrument}
+    If we define
+    \begin{align*}
+        R_i &\equiv \begin{bmatrix} 1 & fam_i & educ_i \end{bmatrix}
+        \\
+        W_i &\equiv \begin{bmatrix}
+                    1 \\
+                    fam_i \\
+                    sub_i
+                    \end{bmatrix}
+        \\
+        \gamma &\equiv \begin{bmatrix}
+                         \delta_0 \\
+                         \delta_1 \\
+                         \alpha_2
+                        \end{bmatrix}
+    \end{align*}
+    The exclusion restrictions imply
+    \begin{align*}
+        y_i = R_i \gamma + v_i, \qquad \mathbb{E}[W_i \cdot v_i] = 0
+    \end{align*}
+    We can obtain a consistent estimator for $\gamma$, which will give us a consistent estimator for $\delta_0$, $\delta_1$, $\alpha_2$. Is this really true?
+\end{frame}
+
+% Just-Identified ----------------------------------------------------------------
+\begin{frame}{Just-Identified Instrument}
+
+    We can play around with our formula for $y_i$ as follows
+    \begin{align*}
+        W_i y_i = (W_i R_i) \gamma + W_i V_i \implies \gamma = (\mathbb{E}[W_i R_i])^{-1} \mathbb{E}[W_i Y_i]    
+    \end{align*}
+
+    What condition do we need to impose on $\mathbb{E}[W_i R_i]$?
+
+    \vspace{2em}
+    
+    Replace the population expectations by sample averages to get a consistent estimator for $\gamma$:
+    \begin{align*}
+        \hat{\gamma} &= \Biggr( \frac{1}{n} \sum_{i=1}^n W_i R_i \Biggr)^{-1} \Biggr( \frac{1}{n} \sum_{i=1}^n \sum_{i=1}^n W_i Y_i \Biggr) = S_{WR}^{-1} S_{WY}
+    \end{align*}
+    
+\end{frame}
+
+\begin{frame}{Just-Identified Instrument}
+
+    Suppose that $fam_i = 0$ and that it doesn't matter. So our population equations become
+    \begin{align*}
+        y_i = \delta_0 + \alpha_2 \times educ_i + v_i, \qquad \mathbb{E}[v_i] = 0, \qquad \mathbb{E}[sub_i \cdot v_i] = 0
+    \end{align*}
+
+    This means then that $\operatorname{Cov}(sub_i, v_i) = 0$ and that
+    \begin{align*}
+        \operatorname{Cov}(sub_i, y_i) = \operatorname{Cov}(sub_i, educ_i) \times \alpha_2 \implies \alpha_2 = \frac{\operatorname{Cov}(sub_i, y_i)}{\operatorname{Cov}(sub_i, educ_i)}
+    \end{align*}
+
+    This leads us to our second condition for the instrument: $\operatorname{Cov}(sub_i, educ_i) \neq 0$. Again, we can replace the population covariances with their sample counterparts to get a consistent estimator:
+    \begin{align*}
+        \hat{\alpha}_2 = \frac{\widehat{\operatorname{Cov}}(sub_i, y_i)}{\widehat{\operatorname{Cov}}(sub_i, educ_i)}
+    \end{align*}
+\end{frame}
+
+% Over-Identified ----------------------------------------------------------------
+\begin{frame}{Over-Identified Instrument}
+
+    If you got the answers to the previous part right you know that we have considered that $\operatorname{rank}(R) = \operatorname{rank}(W)$. But what something goes wrong if we assume that $\operatorname{rank}(R) \neq \operatorname{rank}(W)$. What is going on?
+
+    \vspace{2em}
+
+    To get around this issue, we can estimate $\gamma$ using a minimum-distance estimator:
+    \begin{align*}
+        \hat{\gamma} &= \arg \min_a ( S_{WY} - S_{WR} a)' \hat{\Omega} (S_{WY} - S_{WR} a)
+        \\
+        &= \Biggr( S_{WR}' \hat{\Omega} S_{WR} \Biggr)^{-1} S_{WR}' \hat{\Omega} S_{WY}
+    \end{align*}
+
+    What requirements do we need for the matrix $\hat{\Omega}$? More on this in a second.
+    
+\end{frame}
+
+% 2SLS ---------------------------------------------------------------------------
+\begin{frame}{2SLS}
+
+    Let's put it all together. We have that:
+    \begin{align*}
+        y_i = \delta_0 + \delta_1 \times fam_i + \alpha_2 \times educ_i + v_i, \qquad \mathbb{E}[W_i \cdot v_i] = 0
+    \end{align*}
+
+    We can use the population equation above to write the best linear predictor of $y_i$ given $W_i$ as:
+    \begin{align*}
+        \mathbb{E}[y_i \mid W_i] = \delta_0 + \delta_1 \times fam_i + \alpha_2 \times \mathbb{E} [educ_i \mid W_i] 
+    \end{align*}
+    Define
+    \begin{align*}
+        educ_i^* = \mathbb{E}[educ_i \mid W_i] = W_i' \tau
+    \end{align*}
+    Then the best linear predictor of $Y_i$ given $fam_i$ and $educ_i$ identifies $\delta_0$, $\delta_1$ and $\alpha_2$:
+    \begin{align*}
+        \mathbb{E}[y_i \mid W_i] = \delta_0 + \delta_1 \times fam_i + \alpha_2 \times educ^*_i
+    \end{align*}
+    
+\end{frame}

@@ -1,0 +1,49 @@
+% Begin section ----------------------------------------------------------------
+\section{Extra Topics}
+
+% Shift-Share -------------------------------------------------------------------
+\begin{frame}{Shift-Share IV}
+    Assume that we are interested in understanding the following regression
+    \begin{align*}
+        y_\ell = \beta_0 + \beta_1 x_\ell + \varepsilon_\ell
+    \end{align*}
+    such that $\mathbb{E}[\varepsilon_\ell x_\ell] \neq 0$. We have that $y_\ell$ is the growth in employment, $x_\ell$ is the growth in import exposure to China. We need an instrument for location-level exposure to trade with China. To find an IV, let's look at two accounting identities
+    \begin{align*}
+        x_\ell &= \sum_{k=1}^K z_{\ell k} g_{\ell k}
+        \\
+        g_{\ell k} &= g_k + \tilde{g}_{\ell k}
+    \end{align*}
+    where $z_{\ell k}$ is the share of industry $k$ in location $\ell$, $g_{\ell k}$ is the growth of imports (from China) from industry $k$ in location $\ell$, $g_k$ is the national growth of industry $k$ and $\tilde{g}_{\ell k}$ is some idiosyncratic location-industry growth.
+\end{frame}
+
+\begin{frame}{Shift-Share IV}
+
+    The shift-share (Bartik) instrument is given by
+    \begin{align*}
+        B_\ell = \sum_{k=1}^K z_{\ell k} g_k
+    \end{align*}
+
+    This gives us the following 2SLS structure
+    \begin{align*}
+        y_\ell &= \beta_0 + \beta_1 x_\ell + \varepsilon_\ell
+        \\
+        x_\ell &= \pi_0 + \pi_1 B_\ell + u_\ell
+        \\
+        B_\ell &= \sum_{k=1}^K z_{\ell k} g_k
+        \\
+        g_{\ell k} &= g_k + \tilde{g}_{\ell k}
+    \end{align*}
+    We, of course, need that $\pi_1 \neq 0$ and $\mathbb{E}[\varepsilon_\ell B_\ell] = 0$
+    
+\end{frame}
+
+% Judge IV ----------------------------------------------------------------------
+\begin{frame}{Judge, Examiner, Leniency IV}
+
+    Setting: randomized examiner (e.g. judges, loan officers, administrator, etc.) deciding some outcome (e.g. sentence, loan, cash programme, etc.). Examiners vary in how they decide outcome (some judges are nicer than others).
+
+    \vspace{2em}
+
+    Example: if you are arrested you can either go to jail, pay bail or be released with no bail (in both cases you have to come back for trial). Judge is randomly assigned to judge your case. Can use judge assignment as an instrument to explore effect of bail (or being held in prison) on the probability that you plead guilty. This takes care of endogeneity that some people are held in jail or are given bail because of confounding factors.
+    
+\end{frame}
